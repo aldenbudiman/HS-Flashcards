@@ -1,4 +1,4 @@
-`use client`
+'use client'
 
 import { useUser } from '@clerk/nextjs';
 import { useState, useEffect } from 'react';
@@ -34,14 +34,14 @@ export default function FlashCard() {
 
     useEffect(() => {
         async function getFlashcard() {
-            if (!saerch || !user) return
+            if (!search || !user) return
         
             const colRef = collection(doc(collection(db, 'users'), user.id), search)
             const docs = await getDocs(colRef)
             const flashcards = []
       
             docs.forEach((doc) => {
-                flashcards.push({id: devicePixelRatio.id, ...doc.data()})
+                flashcards.push({id: doc.id, ...doc.data()})
             })
             setFlashcards(flashcards)
           }

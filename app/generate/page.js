@@ -18,7 +18,7 @@ import {
   Paper,
   CardActionArea,
 } from '@mui/material'
-import { doc, collection, setDoc, getDoc, writeBatch } from 'firebase/firestore'
+import { doc, collection, setDoc, getDoc, writeBatch, docSnap } from 'firebase/firestore'
 import { useRouter } from 'next/navigation'
 import { useUser } from '@clerk/nextjs'
 import { db } from '@/firebase' // Adjust the import according to your Firebase setup
@@ -60,7 +60,7 @@ export default function Generate() {
 
     const batch = writeBatch(db)
     const userDocRef = doc(collection(db, 'users'), user.id)
-    const userDocSnap = await getDoc(userDocRef)
+    const docSnap = await getDoc(userDocRef)
 
     if (docSnap.exists()) {
         const collections = docSnap.data().flashcards || []
@@ -69,7 +69,7 @@ export default function Generate() {
             return
         }
         else {
-            collection.push({name})
+            collections.push({name})
             batch.set(userDocRef, {flashcards: collections}, {merge: true})
         }
     } else {
@@ -83,7 +83,7 @@ export default function Generate() {
     })
 
     await batch.commit()
-    handleCloseDialog()
+    handleClose()
     router.push('/flashcards')
   }
 

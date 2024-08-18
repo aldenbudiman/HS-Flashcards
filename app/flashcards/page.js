@@ -10,6 +10,7 @@ import { Container, Grid, Card, CardActionArea, CardContent, Typography, Box } f
 export default function FlashcardPage() {
   const { isLoaded, isSignedIn, user } = useUser();
   const [flashcards, setFlashcards] = useState([]);
+  const router = useRouter();
 
   useEffect(() => {
     async function getFlashcards() {
@@ -18,12 +19,12 @@ export default function FlashcardPage() {
         const docRef = doc(collection(db, 'users'), user.id)
         const docSnap = await getDoc(docRef)
   
-        if(!docSnap.exists()) {
+        if(docSnap.exists()) {
           const collections = docSnap.data().flashcards || []
           setFlashcards(collections)
         }
         else {
-          await setDoc(doc(docRef, { flashcards: [] }))
+          await setDoc(docRef, { flashcards: [] })
         }
       }
       getFlashcards()
@@ -34,7 +35,7 @@ export default function FlashcardPage() {
   }
 
   const handleCardClick = (id) => {
-    router.push(`/flashcards?id=${id}`)
+    router.push(`/flashcard?id=${id}`)
   }
 
   return (
