@@ -1,6 +1,7 @@
 'use client'
-import React, { useState } from 'react'
-import Image from 'next/image'
+
+import React, { useState } from 'react';
+import Image from 'next/image';
 import { 
   AppBar, 
   Toolbar, 
@@ -12,16 +13,16 @@ import {
   ThemeProvider, 
   createTheme,
   CssBaseline
-} from '@mui/material'
-import { SignedIn, SignedOut, UserButton, ClerkProvider } from '@clerk/nextjs'
-import getStripe from '@/utils/get-stripe'
-import Head from 'next/head'
+} from '@mui/material';
+import { SignedIn, SignedOut, UserButton, ClerkProvider } from '@clerk/nextjs';
+import getStripe from '@/utils/get-stripe';
+import Head from 'next/head';
 import { 
   TextFields, 
   Psychology, 
   Devices,
   ArrowForward
-} from '@mui/icons-material'
+} from '@mui/icons-material';
 
 const theme = createTheme({
   typography: {
@@ -66,24 +67,26 @@ export default function Home() {
       headers: {
         origin: 'http://localhost:3000',
       },
-    })
+    });
 
-    const checkoutSessionJson = await checkoutSession.json()
+    const checkoutSessionJson = await checkoutSession.json();
 
     if (checkoutSession.status === 500) {
-      console.error(checkoutSession.message)
-      return
+      console.error(checkoutSession.message);
+      return;
     }
 
-    const stripe = await getStripe()
-    const {error} = await stripe.redirectToCheckout({
+    const stripe = await getStripe();
+    const { error } = await stripe.redirectToCheckout({
       sessionId: checkoutSessionJson.id,
-    })
+    });
 
     if (error) {
-      console.warn(error.message)
+      console.warn(error.message);
     }
-  }
+  };
+
+  const buttonHeight = 48;
 
   return (
     <ThemeProvider theme={theme}>
@@ -91,13 +94,13 @@ export default function Home() {
       <Container maxWidth="lg">
         <Head>
           <title>Flashcard SaaS</title>
-          <meta name="description" content="Create flashcards from your text"/>
+          <meta name="description" content="Create flashcards from your text" />
           <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" />
         </Head>
 
         <AppBar position="static" color="transparent" elevation={0}>
           <Toolbar>
-            <Typography variant="h6" style={{flexGrow: 1, fontWeight: 700}}>
+            <Typography variant="h6" style={{ flexGrow: 1, fontWeight: 700 }}>
               Flashcard SaaS
             </Typography>
             <SignedOut>
@@ -192,13 +195,26 @@ export default function Home() {
                 sx={{
                   p: 4,
                   border: '1px solid',
-                  borderColor: 'grey.200',
+                  borderColor: 'grey.300',
                   borderRadius: 4,
                   transition: 'all 0.3s',
+                  boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
                   '&:hover': {
-                    boxShadow: '0 8px 24px rgba(0,0,0,0.1)',
+                    boxShadow: '0 8px 24px rgba(0,0,0,0.15)',
                     transform: 'translateY(-4px)',
                   },
+                  position: 'relative',
+                  '&::before': {
+                    content: '""',
+                    position: 'absolute',
+                    top: -1,
+                    left: -1,
+                    right: -1,
+                    bottom: -1,
+                    borderRadius: 'inherit',
+                    border: '1px solid rgba(0,0,0,0.1)',
+                    pointerEvents: 'none',
+                  }
                 }}
               >
                 <Typography variant="h4" gutterBottom>Basic</Typography>
@@ -221,12 +237,22 @@ export default function Home() {
                       borderRadius: 2,
                       bgcolor: 'grey.100',
                       color: 'grey.600',
+                      height: buttonHeight, // Set the same height as the button
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
                     }}
                   >
                     Using Basic
                   </Box>
                 ) : (
-                  <Button variant="outlined" color="primary" size="large" onClick={handleBasicClick}>
+                  <Button 
+                    variant="outlined" 
+                    color="primary" 
+                    size="large" 
+                    onClick={handleBasicClick}
+                    sx={{ height: buttonHeight }} // Set a fixed height for the button
+                  >
                     Choose Basic
                   </Button>
                 )}
@@ -268,5 +294,5 @@ export default function Home() {
         </Box>
       </Container>
     </ThemeProvider>
-  )
+  );
 }
