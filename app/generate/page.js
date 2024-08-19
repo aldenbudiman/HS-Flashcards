@@ -43,6 +43,10 @@ const theme = createTheme({
       fontSize: '2rem',
       fontWeight: 500,
     },
+    h5: {
+      fontSize: '1.5rem',
+      fontWeight: 500,
+    },
     h6: {
       fontSize: '1.25rem',
       fontWeight: 500,
@@ -51,6 +55,9 @@ const theme = createTheme({
   palette: {
     primary: {
       main: '#3f51b5',
+    },
+    secondary: {
+      main: '#f50057',
     },
     background: {
       default: '#f5f5f5',
@@ -68,7 +75,7 @@ export default function Generate() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [warningOpen, setWarningOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [errorDialogOpen, setErrorDialogOpen] = useState(false); // New state for error dialog
+  const [errorDialogOpen, setErrorDialogOpen] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async () => {
@@ -104,7 +111,7 @@ export default function Generate() {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const handleWarningClose = () => setWarningOpen(false);
-  const handleErrorDialogClose = () => setErrorDialogOpen(false); // Close error dialog
+  const handleErrorDialogClose = () => setErrorDialogOpen(false);
 
   const handleViewSavedFlashcards = () => {
     if (!isSignedIn) {
@@ -185,7 +192,7 @@ export default function Generate() {
           <Typography variant="h4" component="h1" gutterBottom>
             Generate Flashcards
           </Typography>
-          <Paper sx={{ p: 4, width: '100%' }}>
+          <Paper sx={{ p: 4, width: '100%', maxWidth: 600, boxShadow: 3, borderRadius: 2 }}>
             <TextField
               value={text}
               onChange={(e) => setText(e.target.value)}
@@ -202,6 +209,7 @@ export default function Generate() {
               onClick={handleSubmit}
               fullWidth
               disabled={loading}
+              sx={{ py: 1.5 }}
             >
               {loading ? 'Generating...' : 'Submit'}
             </Button>
@@ -209,12 +217,12 @@ export default function Generate() {
         </Box>
         {flashcards.length > 0 && (
           <Box sx={{ mt: 4 }}>
-            <Typography variant='h5'>Flashcards Preview</Typography>
+            <Typography variant='h5' gutterBottom>Flashcards Preview</Typography>
             <Grid container spacing={3}>
               {flashcards.map((flashcard, index) => (
                 <Grid item xs={12} sm={6} md={4} key={index}>
                   <CardActionArea onClick={() => handleCardClick(index)}>
-                    <CardContent>
+                    <CardContent sx={{ boxShadow: 3, borderRadius: 2, overflow: 'hidden' }}>
                       <Box
                         sx={{
                           perspective: '1000px',
@@ -226,6 +234,7 @@ export default function Generate() {
                             height: '200px',
                             boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
                             transform: flipped[index] ? 'rotateY(180deg)' : 'rotateY(0deg)',
+                            borderRadius: 2,
                           },
                           '& > div > div': {
                             position: 'absolute',
@@ -237,6 +246,8 @@ export default function Generate() {
                             alignItems: 'center',
                             padding: 2,
                             boxSizing: 'border-box',
+                            backgroundColor: '#fff',
+                            borderRadius: 2,
                           },
                           '& > div > div:nth-of-type(2)': {
                             transform: 'rotateY(180deg)',
@@ -266,6 +277,7 @@ export default function Generate() {
                 variant="contained"
                 color="secondary"
                 onClick={handleOpen}
+                sx={{ py: 1.5 }}
               >
                 Save
               </Button>
@@ -316,6 +328,11 @@ export default function Generate() {
             <Button onClick={handleErrorDialogClose}>Close</Button>
           </DialogActions>
         </Dialog>
+        <Box sx={{ mt: 6, py: 3, textAlign: 'center', borderTop: '1px solid #ddd' }}>
+          <Typography variant="body2" color="textSecondary">
+            © 2024 Flashcard SaaS. All rights reserved.
+          </Typography>
+        </Box>
       </Container>
     </ThemeProvider>
   );
