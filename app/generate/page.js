@@ -17,11 +17,47 @@ import {
   DialogActions,
   Paper,
   CardActionArea,
+  AppBar,
+  Toolbar,
+  ThemeProvider,
+  createTheme,
+  CssBaseline
 } from '@mui/material'
 import { doc, collection, setDoc, getDoc, writeBatch, docSnap } from 'firebase/firestore'
 import { useRouter } from 'next/navigation'
 import { useUser } from '@clerk/nextjs'
 import { db } from '@/firebase' // Adjust the import according to your Firebase setup
+import Link from 'next/link'
+
+const theme = createTheme({
+  typography: {
+    fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+    h1: {
+      fontSize: '3rem',
+      fontWeight: 700,
+    },
+    h2: {
+      fontSize: '2.5rem',
+      fontWeight: 600,
+    },
+    h4: {
+      fontSize: '2rem',
+      fontWeight: 500,
+    },
+    h6: {
+      fontSize: '1.25rem',
+      fontWeight: 500,
+    },
+  },
+  palette: {
+    primary: {
+      main: '#3f51b5',
+    },
+    background: {
+      default: '#f5f5f5',
+    },
+  },
+});
 
 export default function Generate() {
   const {isLoaded, isSignedIn, user} = useUser()
@@ -88,7 +124,33 @@ export default function Generate() {
   }
 
   return (
-    <Container maxWidth="md">
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Container maxWidth="lg">
+        <AppBar position="static" color="transparent" elevation={0}>
+        <Toolbar>
+            <Typography variant="h6" style={{flexGrow: 1, fontWeight: 700}}>
+            <Link href="/" style={{ textDecoration: 'none', color: 'inherit' }}>
+                Flashcard SaaS
+            </Link>
+            </Typography>
+            <Button 
+            color="primary" 
+            variant="outlined"
+            href="/flashcards"
+            sx={{
+                borderColor: theme.palette.primary.main,
+                color: theme.palette.primary.main,
+                '&:hover': {
+                backgroundColor: 'rgba(63, 81, 181, 0.04)',
+                borderColor: theme.palette.primary.main,
+                },
+            }}
+            >
+            View Saved Flashcards
+            </Button>
+        </Toolbar>
+        </AppBar>
         <Box sx={{ mt: 4, mb: 6, display:'flex', flexDirection:'column', alignItems:'center'}}>
             <Typography variant="h4" component="h1" gutterBottom>
                 Generate Flashcards
@@ -110,7 +172,6 @@ export default function Generate() {
                     onClick={handleSubmit}
                     fullWidth
                 >
-                    {' '}
                     Submit
                 </Button>
             </Paper>
@@ -191,7 +252,7 @@ export default function Generate() {
                 <TextField
                     autoFocus
                     margin='dense'
-                    label='Collecion Name'
+                    label='Collection Name'
                     type='text'
                     fullWidth
                     value={name}
@@ -204,6 +265,7 @@ export default function Generate() {
                 <Button onClick={saveFlashcards}>Save</Button>
             </DialogActions>
         </Dialog>
-    </Container>
+      </Container>
+    </ThemeProvider>
   )
 }

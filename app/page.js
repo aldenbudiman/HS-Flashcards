@@ -61,7 +61,28 @@ export default function Home() {
   };
 
   const handleSubmit = async () => {
-    // ... (keep the existing handleSubmit function)
+    const checkoutSession = await fetch('/api/checkout_session', {
+      method: 'POST',
+      headers: {
+        origin: 'http://localhost:3000',
+      },
+    })
+
+    const checkoutSessionJson = await checkoutSession.json()
+
+    if (checkoutSession.status === 500) {
+      console.error(checkoutSession.message)
+      return
+    }
+
+    const stripe = await getStripe()
+    const {error} = await stripe.redirectToCheckout({
+      sessionId: checkoutSessionJson.id,
+    })
+
+    if (error) {
+      console.warn(error.message)
+    }
   }
 
   return (
@@ -80,8 +101,26 @@ export default function Home() {
               Flashcard SaaS
             </Typography>
             <SignedOut>
-              <Button color="primary" href="/sign-in">Sign In</Button>
-              <Button color="primary" variant="contained" href="/sign-up">Sign Up</Button>
+              <Button 
+                color="primary" 
+                href="/sign-in" 
+                variant="outlined"
+                style={{
+                  marginRight: '16px',
+                  borderColor: theme.palette.primary.main,
+                  color: theme.palette.primary.main,
+                  backgroundColor: 'transparent'
+                }}
+              >
+                Sign In
+              </Button>
+              <Button 
+                color="primary" 
+                variant="contained" 
+                href="/sign-up"
+              >
+                Sign Up
+              </Button>
             </SignedOut>
             <SignedIn>
               <UserButton />
@@ -204,7 +243,7 @@ export default function Home() {
                 }}
               >
                 <Typography variant="h4" gutterBottom>Pro</Typography>
-                <Typography variant="h3" gutterBottom>$10 / month</Typography>
+                <Typography variant="h3" gutterBottom>$5 / month</Typography>
                 <Typography sx={{ mb: 3 }}>
                   Unlimited flashcards and storage, with priority support.
                 </Typography>
