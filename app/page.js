@@ -203,9 +203,15 @@ export default function Home() {
               >
                 <Typography variant="h4" gutterBottom>Basic</Typography>
                 <Typography variant="h3" gutterBottom>Free</Typography>
-                <Typography sx={{ mb: 3 }}>
-                  Access to basic flashcard features and limited storage.
-                </Typography>
+                <Box sx={{ textAlign: 'left', mb: 3 }}>
+                  <Typography variant="body1" gutterBottom>Features:</Typography>
+                  <ul>
+                    <li>Access to basic flashcard creation tools</li>
+                    <li>Save generated flashcards</li>
+                    <li>Up to 100 flashcards storage</li>
+                    <li>Basic customer support</li>
+                  </ul>
+                </Box>
                 {isBasicChosen ? (
                   <Box
                     sx={{
@@ -244,9 +250,15 @@ export default function Home() {
               >
                 <Typography variant="h4" gutterBottom>Pro</Typography>
                 <Typography variant="h3" gutterBottom>$5 / month</Typography>
-                <Typography sx={{ mb: 3 }}>
-                  Unlimited flashcards and storage, with priority support.
-                </Typography>
+                <Box sx={{ textAlign: 'left', mb: 3 }}>
+                  <Typography variant="body1" gutterBottom>Features:</Typography>
+                  <ul>
+                    <li>Unlimited flashcard generation</li>
+                    <li>Unlimited Storage</li>
+                    <li>Advanced AI-powered flashcard creation</li>
+                    <li>Priority customer support</li>
+                  </ul>
+                </Box>
                 <Button variant="contained" color="secondary" size="large" onClick={handleSubmit}>
                   Choose Pro
                 </Button>
