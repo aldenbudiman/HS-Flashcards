@@ -295,7 +295,7 @@ export default function Home() {
                 }}
               >
                 <Typography variant="h4" gutterBottom>Pro</Typography>
-                <Typography variant="h3" gutterBottom>\$5 / month</Typography>
+                <Typography variant="h3" gutterBottom>$5 / month</Typography>
                 <Box sx={{ textAlign: 'left', mb: 3 }}>
                   <Typography variant="body1" gutterBottom>Features:</Typography>
                   <ul>
@@ -324,8 +324,8 @@ export default function Home() {
             severity="warning" 
             sx={{ 
               width: '100%', 
-              fontSize: '1.25rem', // Increase font size
-              p: 2 // Increase padding
+              fontSize: '1.25rem',
+              p: 2
             }}
           >
             You must be signed in to choose the Pro plan.
