@@ -12,9 +12,11 @@ import {
   Container, 
   ThemeProvider, 
   createTheme,
-  CssBaseline
+  CssBaseline,
+  Snackbar,
+  Alert
 } from '@mui/material';
-import { SignedIn, SignedOut, UserButton, ClerkProvider } from '@clerk/nextjs';
+import { SignedIn, SignedOut, UserButton, useUser } from '@clerk/nextjs';
 import getStripe from '@/utils/get-stripe';
 import Head from 'next/head';
 import { 
@@ -55,38 +57,54 @@ const theme = createTheme({
 });
 
 export default function Home() {
-  const [isBasicChosen, setIsBasicChosen] = useState(false);
+  const [isBasicChosen, setIsBasicChosen] = useState(true); // Default to "Using Basic"
+  const { isSignedIn } = useUser(); // Use Clerk's useUser hook to check sign-in status
+  const [openSnackbar, setOpenSnackbar] = useState(false);
 
   const handleBasicClick = () => {
     setIsBasicChosen(true);
   };
 
   const handleSubmit = async () => {
-    const checkoutSession = await fetch('/api/checkout_session', {
-      method: 'POST',
-      headers: {
-        origin: 'http://localhost:3000',
-      },
-    });
-
-    const checkoutSessionJson = await checkoutSession.json();
-
-    if (checkoutSession.status === 500) {
-      console.error(checkoutSession.message);
+    if (!isSignedIn) {
+      setOpenSnackbar(true);
       return;
     }
 
-    const stripe = await getStripe();
-    const { error } = await stripe.redirectToCheckout({
-      sessionId: checkoutSessionJson.id,
-    });
+    try {
+      const checkoutSession = await fetch('/api/checkout_session', {
+        method: 'POST',
+        headers: {
+          origin: 'http://localhost:3000',
+        },
+      });
 
-    if (error) {
-      console.warn(error.message);
+      const checkoutSessionJson = await checkoutSession.json();
+
+      if (checkoutSession.status === 500) {
+        console.error(checkoutSessionJson.message);
+        return;
+      }
+
+      const stripe = await getStripe();
+      const { error } = await stripe.redirectToCheckout({
+        sessionId: checkoutSessionJson.id,
+      });
+
+      if (error) {
+        console.warn(error.message);
+      }
+    } catch (error) {
+      console.error('An error occurred during checkout:', error);
     }
   };
 
-  const buttonHeight = 48;
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar(false);
+  };
+
+  const boxHeight = 400; // Set a fixed height for both pricing boxes
+  const buttonHeight = 48; // Define the button height
 
   return (
     <ThemeProvider theme={theme}>
@@ -204,6 +222,7 @@ export default function Home() {
                     transform: 'translateY(-4px)',
                   },
                   position: 'relative',
+                  height: boxHeight, // Set a fixed height for the box
                   '&::before': {
                     content: '""',
                     position: 'absolute',
@@ -272,10 +291,11 @@ export default function Home() {
                     boxShadow: '0 8px 24px rgba(63,81,181,0.3)',
                     transform: 'translateY(-4px)',
                   },
+                  height: boxHeight, // Set a fixed height for the box
                 }}
               >
                 <Typography variant="h4" gutterBottom>Pro</Typography>
-                <Typography variant="h3" gutterBottom>$5 / month</Typography>
+                <Typography variant="h3" gutterBottom>\$5 / month</Typography>
                 <Box sx={{ textAlign: 'left', mb: 3 }}>
                   <Typography variant="body1" gutterBottom>Features:</Typography>
                   <ul>
@@ -292,6 +312,25 @@ export default function Home() {
             </Grid>
           </Grid>
         </Box>
+
+        <Snackbar
+          open={openSnackbar}
+          autoHideDuration={6000}
+          onClose={handleCloseSnackbar}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        >
+          <Alert 
+            onClose={handleCloseSnackbar} 
+            severity="warning" 
+            sx={{ 
+              width: '100%', 
+              fontSize: '1.25rem', // Increase font size
+              p: 2 // Increase padding
+            }}
+          >
+            You must be signed in to choose the Pro plan.
+          </Alert>
+        </Snackbar>
       </Container>
     </ThemeProvider>
   );

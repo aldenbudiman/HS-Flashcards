@@ -3,7 +3,7 @@
 import { useUser } from '@clerk/nextjs';
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { collection, doc, getDoc, getDocs, setDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, setDoc, deleteDoc } from 'firebase/firestore';
 import { db } from '@/firebase'; // Assume this is where you initialize Firebase
 import { 
   Container, 
@@ -17,8 +17,16 @@ import {
   Toolbar,
   ThemeProvider,
   createTheme,
-  CssBaseline
+  CssBaseline,
+  IconButton,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  Button
 } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
 import Head from 'next/head';
 import Link from 'next/link';
 
@@ -55,6 +63,8 @@ const theme = createTheme({
 export default function FlashcardPage() {
   const { isLoaded, isSignedIn, user } = useUser();
   const [flashcards, setFlashcards] = useState([]);
+  const [selectedFlashcard, setSelectedFlashcard] = useState(null);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
@@ -81,7 +91,34 @@ export default function FlashcardPage() {
 
   const handleCardClick = (id) => {
     router.push(`/flashcard?id=${id}`);
-  }
+  };
+
+  const handleDeleteClick = (flashcard) => {
+    setSelectedFlashcard(flashcard);
+    setDeleteDialogOpen(true);
+  };
+
+  const handleDeleteConfirm = async () => {
+    if (!selectedFlashcard) return;
+
+    try {
+      const userDocRef = doc(collection(db, 'users'), user.id);
+      const flashcardDocRef = doc(collection(userDocRef, selectedFlashcard.name));
+      await deleteDoc(flashcardDocRef);
+
+      setFlashcards((prev) => prev.filter((fc) => fc.name !== selectedFlashcard.name));
+    } catch (error) {
+      console.error("Error deleting flashcard:", error);
+    } finally {
+      setDeleteDialogOpen(false);
+      setSelectedFlashcard(null);
+    }
+  };
+
+  const handleDeleteCancel = () => {
+    setDeleteDialogOpen(false);
+    setSelectedFlashcard(null);
+  };
 
   return (
     <ThemeProvider theme={theme}>
@@ -126,11 +163,32 @@ export default function FlashcardPage() {
                       </Typography>
                     </CardContent>
                   </CardActionArea>
+                  <IconButton
+                    aria-label="delete"
+                    onClick={() => handleDeleteClick(flashcard)}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
                 </Card>
               </Grid>
             ))}
           </Grid>
         </Box>
+
+        <Dialog open={deleteDialogOpen} onClose={handleDeleteCancel}>
+          <DialogTitle>Confirm Deletion</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Are you sure you want to delete this flashcard?
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleDeleteCancel}>Cancel</Button>
+            <Button onClick={handleDeleteConfirm} color="secondary">
+              Delete
+            </Button>
+          </DialogActions>
+        </Dialog>
       </Container>
     </ThemeProvider>
   );

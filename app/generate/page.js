@@ -68,9 +68,15 @@ export default function Generate() {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [warningOpen, setWarningOpen] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [errorDialogOpen, setErrorDialogOpen] = useState(false); // New state for error dialog
   const router = useRouter();
 
   const handleSubmit = async () => {
+    if (!text.trim()) {
+      setErrorDialogOpen(true);
+      return;
+    }
+
     setLoading(true);
     fetch('/api/generate', {
       method: 'POST',
@@ -98,6 +104,7 @@ export default function Generate() {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const handleWarningClose = () => setWarningOpen(false);
+  const handleErrorDialogClose = () => setErrorDialogOpen(false); // Close error dialog
 
   const handleViewSavedFlashcards = () => {
     if (!isSignedIn) {
@@ -296,6 +303,17 @@ export default function Generate() {
           </DialogContent>
           <DialogActions>
             <Button onClick={handleWarningClose}>Close</Button>
+          </DialogActions>
+        </Dialog>
+        <Dialog open={errorDialogOpen} onClose={handleErrorDialogClose}>
+          <DialogTitle>Error</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              Please enter a prompt before generating flashcards.
+            </DialogContentText>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={handleErrorDialogClose}>Close</Button>
           </DialogActions>
         </Dialog>
       </Container>
