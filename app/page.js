@@ -111,7 +111,7 @@ export default function Home() {
       <CssBaseline />
       <Container maxWidth="lg">
         <Head>
-          <title>Flashcard SaaS</title>
+          <title>Flazz</title>
           <meta name="description" content="Create flashcards from your text" />
           <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" />
         </Head>
@@ -119,7 +119,7 @@ export default function Home() {
         <AppBar position="static" color="transparent" elevation={0}>
           <Toolbar>
             <Typography variant="h6" style={{ flexGrow: 1, fontWeight: 700 }}>
-              Flashcard SaaS
+              Flazz
             </Typography>
             <SignedOut>
               <Button 
@@ -151,7 +151,7 @@ export default function Home() {
 
         <Box sx={{ textAlign: 'center', my: 8 }}>
           <Typography variant="h1" gutterBottom>
-            Welcome to Flashcard SaaS
+            Welcome to Flazz
           </Typography>
           <Typography variant="h6" gutterBottom sx={{ mb: 4 }}>
             The easiest way to create flashcards from your text.
@@ -331,6 +331,13 @@ export default function Home() {
             You must be signed in to choose the Pro plan.
           </Alert>
         </Snackbar>
+
+        {/* Footer */}
+        <Box sx={{ py: 3, textAlign: 'center', borderTop: '1px solid #ddd', backgroundColor: '#f5f5f5' }}>
+          <Typography variant="body2" color="textSecondary">
+            © 2024 Flazz. All rights reserved.
+          </Typography>
+        </Box>
       </Container>
     </ThemeProvider>
   );

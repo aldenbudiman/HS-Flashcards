@@ -114,7 +114,7 @@ export default function FlashCard() {
                                     },
                                 }}
                             >
-                                Flashcard SaaS
+                                Flazz
                             </Typography>
                         </Box>
                         <Box>

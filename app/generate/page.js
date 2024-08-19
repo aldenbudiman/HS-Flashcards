@@ -163,177 +163,179 @@ export default function Generate() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <Container maxWidth="lg">
-        <AppBar position="static" color="transparent" elevation={0}>
-          <Toolbar>
-            <Typography variant="h6" style={{ flexGrow: 1, fontWeight: 700 }}>
-              <Link href="/" style={{ textDecoration: 'none', color: 'inherit' }}>
-                Flashcard SaaS
-              </Link>
-            </Typography>
-            <Button
-              color="primary"
-              variant="outlined"
-              onClick={handleViewSavedFlashcards}
-              sx={{
-                borderColor: theme.palette.primary.main,
-                color: theme.palette.primary.main,
-                '&:hover': {
-                  backgroundColor: 'rgba(63, 81, 181, 0.04)',
+      <Box sx={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
+        <Container maxWidth="lg" sx={{ flex: 1 }}>
+          <AppBar position="static" color="transparent" elevation={0}>
+            <Toolbar>
+              <Typography variant="h6" style={{ flexGrow: 1, fontWeight: 700 }}>
+                <Link href="/" style={{ textDecoration: 'none', color: 'inherit' }}>
+                  Flazz
+                </Link>
+              </Typography>
+              <Button
+                color="primary"
+                variant="outlined"
+                onClick={handleViewSavedFlashcards}
+                sx={{
                   borderColor: theme.palette.primary.main,
-                },
-              }}
-            >
-              View Saved Flashcards
-            </Button>
-          </Toolbar>
-        </AppBar>
-        <Box sx={{ mt: 4, mb: 6, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-          <Typography variant="h4" component="h1" gutterBottom>
-            Generate Flashcards
-          </Typography>
-          <Paper sx={{ p: 4, width: '100%', maxWidth: 600, boxShadow: 3, borderRadius: 2 }}>
-            <TextField
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-              label="Enter text"
-              fullWidth
-              multiline
-              rows={4}
-              variant="outlined"
-              sx={{ mb: 2 }}
-            />
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={handleSubmit}
-              fullWidth
-              disabled={loading}
-              sx={{ py: 1.5 }}
-            >
-              {loading ? 'Generating...' : 'Submit'}
-            </Button>
-          </Paper>
-        </Box>
-        {flashcards.length > 0 && (
-          <Box sx={{ mt: 4 }}>
-            <Typography variant='h5' gutterBottom>Flashcards Preview</Typography>
-            <Grid container spacing={3}>
-              {flashcards.map((flashcard, index) => (
-                <Grid item xs={12} sm={6} md={4} key={index}>
-                  <CardActionArea onClick={() => handleCardClick(index)}>
-                    <CardContent sx={{ boxShadow: 3, borderRadius: 2, overflow: 'hidden' }}>
-                      <Box
-                        sx={{
-                          perspective: '1000px',
-                          '& > div': {
-                            transition: 'transform 0.6s',
-                            transformStyle: 'preserve-3d',
-                            position: 'relative',
-                            width: '100%',
-                            height: '200px',
-                            boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
-                            transform: flipped[index] ? 'rotateY(180deg)' : 'rotateY(0deg)',
-                            borderRadius: 2,
-                          },
-                          '& > div > div': {
-                            position: 'absolute',
-                            width: '100%',
-                            height: '100%',
-                            backfaceVisibility: 'hidden',
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            padding: 2,
-                            boxSizing: 'border-box',
-                            backgroundColor: '#fff',
-                            borderRadius: 2,
-                          },
-                          '& > div > div:nth-of-type(2)': {
-                            transform: 'rotateY(180deg)',
-                          },
-                        }}
-                      >
-                        <div>
-                          <div>
-                            <Typography variant='h5' component="div">
-                              {flashcard.front}
-                            </Typography>
-                          </div>
-                          <div>
-                            <Typography variant='h5' component="div">
-                              {flashcard.back}
-                            </Typography>
-                          </div>
-                        </div>
-                      </Box>
-                    </CardContent>
-                  </CardActionArea>
-                </Grid>
-              ))}
-            </Grid>
-            <Box sx={{ mt: 4, display: 'flex', justifyContent: 'center' }}>
+                  color: theme.palette.primary.main,
+                  '&:hover': {
+                    backgroundColor: 'rgba(63, 81, 181, 0.04)',
+                    borderColor: theme.palette.primary.main,
+                  },
+                }}
+              >
+                View Saved Flashcards
+              </Button>
+            </Toolbar>
+          </AppBar>
+          <Box sx={{ mt: 4, mb: 6, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+            <Typography variant="h4" component="h1" gutterBottom>
+              Generate Flashcards
+            </Typography>
+            <Paper sx={{ p: 4, width: '100%', maxWidth: 600, boxShadow: 3, borderRadius: 2 }}>
+              <TextField
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+                label="Enter text"
+                fullWidth
+                multiline
+                rows={4}
+                variant="outlined"
+                sx={{ mb: 2 }}
+              />
               <Button
                 variant="contained"
-                color="secondary"
-                onClick={handleOpen}
+                color="primary"
+                onClick={handleSubmit}
+                fullWidth
+                disabled={loading}
                 sx={{ py: 1.5 }}
               >
-                Save
+                {loading ? 'Generating...' : 'Submit'}
               </Button>
-            </Box>
+            </Paper>
           </Box>
-        )}
-        <Dialog open={open} onClose={handleClose}>
-          <DialogTitle>Save Flashcards</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              Please enter a name for your flashcard set.
-            </DialogContentText>
-            <TextField
-              autoFocus
-              margin='dense'
-              label='Collection Name'
-              type='text'
-              fullWidth
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              variant='outlined'
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleClose}>Cancel</Button>
-            <Button onClick={saveFlashcards}>Save</Button>
-          </DialogActions>
-        </Dialog>
-        <Dialog open={warningOpen} onClose={handleWarningClose}>
-          <DialogTitle>Warning</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              You need to be signed in to perform this action. Please sign in and try again.
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleWarningClose}>Close</Button>
-          </DialogActions>
-        </Dialog>
-        <Dialog open={errorDialogOpen} onClose={handleErrorDialogClose}>
-          <DialogTitle>Error</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              Please enter a prompt before generating flashcards.
-            </DialogContentText>
-          </DialogContent>
-          <DialogActions>
-            <Button onClick={handleErrorDialogClose}>Close</Button>
-          </DialogActions>
-        </Dialog>
-        <Box sx={{ mt: 6, py: 3, textAlign: 'center', borderTop: '1px solid #ddd' }}>
+          {flashcards.length > 0 && (
+            <Box sx={{ mt: 4 }}>
+              <Typography variant='h5' gutterBottom>Flashcards Preview</Typography>
+              <Grid container spacing={3}>
+                {flashcards.map((flashcard, index) => (
+                  <Grid item xs={12} sm={6} md={4} key={index}>
+                    <CardActionArea onClick={() => handleCardClick(index)}>
+                      <CardContent sx={{ boxShadow: 3, borderRadius: 2, overflow: 'hidden' }}>
+                        <Box
+                          sx={{
+                            perspective: '1000px',
+                            '& > div': {
+                              transition: 'transform 0.6s',
+                              transformStyle: 'preserve-3d',
+                              position: 'relative',
+                              width: '100%',
+                              height: '200px',
+                              boxShadow: '0 4px 8px 0 rgba(0,0,0,0.2)',
+                              transform: flipped[index] ? 'rotateY(180deg)' : 'rotateY(0deg)',
+                              borderRadius: 2,
+                            },
+                            '& > div > div': {
+                              position: 'absolute',
+                              width: '100%',
+                              height: '100%',
+                              backfaceVisibility: 'hidden',
+                              display: 'flex',
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                              padding: 2,
+                              boxSizing: 'border-box',
+                              backgroundColor: '#fff',
+                              borderRadius: 2,
+                            },
+                            '& > div > div:nth-of-type(2)': {
+                              transform: 'rotateY(180deg)',
+                            },
+                          }}
+                        >
+                          <div>
+                            <div>
+                              <Typography variant='h5' component="div">
+                                {flashcard.front}
+                              </Typography>
+                            </div>
+                            <div>
+                              <Typography variant='h5' component="div">
+                                {flashcard.back}
+                              </Typography>
+                            </div>
+                          </div>
+                        </Box>
+                      </CardContent>
+                    </CardActionArea>
+                  </Grid>
+                ))}
+              </Grid>
+              <Box sx={{ mt: 4, display: 'flex', justifyContent: 'center' }}>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  onClick={handleOpen}
+                  sx={{ py: 1.5 }}
+                >
+                  Save
+                </Button>
+              </Box>
+            </Box>
+          )}
+          <Dialog open={open} onClose={handleClose}>
+            <DialogTitle>Save Flashcards</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                Please enter a name for your flashcard set.
+              </DialogContentText>
+              <TextField
+                autoFocus
+                margin='dense'
+                label='Collection Name'
+                type='text'
+                fullWidth
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                variant='outlined'
+              />
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleClose}>Cancel</Button>
+              <Button onClick={saveFlashcards}>Save</Button>
+            </DialogActions>
+          </Dialog>
+          <Dialog open={warningOpen} onClose={handleWarningClose}>
+            <DialogTitle>Warning</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                You need to be signed in to perform this action. Please sign in and try again.
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleWarningClose}>Close</Button>
+            </DialogActions>
+          </Dialog>
+          <Dialog open={errorDialogOpen} onClose={handleErrorDialogClose}>
+            <DialogTitle>Error</DialogTitle>
+            <DialogContent>
+              <DialogContentText>
+                Please enter a prompt before generating flashcards.
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick={handleErrorDialogClose}>Close</Button>
+            </DialogActions>
+          </Dialog>
+        </Container>
+        <Box sx={{ py: 3, textAlign: 'center', borderTop: '1px solid #ddd', backgroundColor: '#f5f5f5' }}>
           <Typography variant="body2" color="textSecondary">
-            © 2024 Flashcard SaaS. All rights reserved.
+            © 2024 Flazz. All rights reserved.
           </Typography>
         </Box>
-      </Container>
+      </Box>
     </ThemeProvider>
   );
 }

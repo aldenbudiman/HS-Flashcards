@@ -129,7 +129,7 @@ export default function FlashcardPage() {
       <CssBaseline />
       <Container maxWidth="lg">
         <Head>
-          <title>Flashcard SaaS</title>
+          <title>Flazz</title>
           <meta name="description" content="Your flashcards"/>
           <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" />
         </Head>
@@ -138,7 +138,7 @@ export default function FlashcardPage() {
           <Toolbar>
             <Typography variant="h6" style={{flexGrow: 1, fontWeight: 700}}>
               <Link href="/" style={{ textDecoration: 'none', color: 'inherit' }}>
-                Flashcard SaaS
+                Flazz
               </Link>
             </Typography>
           </Toolbar>
