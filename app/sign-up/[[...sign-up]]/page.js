@@ -42,8 +42,8 @@ export default function SignUpPage() {
       <CssBaseline />
       <Container maxWidth="lg">
         <Head>
-          <title>Sign Up - Flashcard SaaS</title>
-          <meta name="description" content="Sign up for Flashcard SaaS"/>
+          <title>Sign Up - Flazz</title>
+          <meta name="description" content="Sign up for Flazz"/>
           <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet" />
         </Head>
 
@@ -51,7 +51,7 @@ export default function SignUpPage() {
           <Toolbar>
             <Link href="/" passHref style={{ textDecoration: 'none', color: 'inherit', flexGrow: 1 }}>
               <Typography variant="h6" style={{fontWeight: 700, cursor: 'pointer'}}>
-                Flashcard SaaS
+                Flazz
               </Typography>
             </Link>
             <Button 
@@ -79,7 +79,7 @@ export default function SignUpPage() {
 
         <Box sx={{ textAlign: 'center', my: 8 }}>
           <Typography variant="h2" gutterBottom>
-            Sign Up for Flashcard SaaS
+            Sign Up for Flazz 
           </Typography>
           <Typography variant="h6" gutterBottom sx={{ mb: 4 }}>
             Create an account to start making flashcards easily.
